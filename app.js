@@ -175,7 +175,6 @@ app.post("/users/addUser", async (req, res) => {
             layout: "layouts/main-layout",
             title: "Add User",
             params: req.body,
-            model: results.rows,
           });
         } else {
           const name = username.toLowerCase();
