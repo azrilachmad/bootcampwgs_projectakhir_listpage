@@ -9,10 +9,23 @@
         <a href="/users/item-list" class="alert-link fw-light"
           ><br />Back to item list.</a>
       </div>
-      <% } else {%> <% if (msg.length !== 0) { %>
-      <div class="alert alert-success fw-bold" role="alert"><%= msg %></div>
+      <% } %>
 
-      <% } %> <% } %>
+
+      <div class="row">
+        <div class="col-md-6">
+          <% if (messages.success) { %>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong><%= messages.success %>
+            </strong>
+            <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <% } else {%> <% } %>
+        </div>
+      </div>
+
 
       <% if (model.length < 1 || model.length === null || model.length === undefined) { %>
         <div class="alert alert-danger fw-bold" role="alert">

@@ -153,6 +153,7 @@ app.post("/users/addUser", async (req, res) => {
       layout: "layouts/main-layout",
       title: "Add User",
       params: req.body,
+      model: results.rows,
     });
   } else {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -174,6 +175,7 @@ app.post("/users/addUser", async (req, res) => {
             layout: "layouts/main-layout",
             title: "Add User",
             params: req.body,
+            model: results.rows,
           });
         } else {
           const name = username.toLowerCase();
@@ -205,65 +207,64 @@ app.post("/users/item-list/add", async (req, res) => {
     item_image,
   });
 
-  const errors = []
+  const errors = [];
 
   if (category === undefined) {
-    errors.push({message: "Please select a category"})
+    errors.push({ message: "Please select a category" });
   }
 
-  if(quantity < 0){
-    errors.push({message: "Invalid amount of quantity"})
+  if (quantity < 0 || quantity === "") {
+    errors.push({ message: "Invalid amount of quantity" });
   }
 
-  if (errors.length > 0){
-    res.render("/users/item-list", {
+  if (price < 0 || quantity === "") {
+    errors.push({ message: "Invalid amount of price" });
+  }
+
+  if (errors.length > 0) {
+    res.render("add-item", {
       errors,
       layout: "layouts/main-layout",
       title: "Item List",
-      params: req.body
-    })
-  }else{
+      params: req.body,
+    });
+  } else {
     pool.query(
       `SELECT * FROM items where item_name=$1`,
       [item_name],
-      (err, results) =>{
-        if(err) {
-          throw err
+      (err, results) => {
+        if (err) {
+          throw err;
         }
-        console.log(results.rows)
+        console.log(results.rows);
 
-        if(results.rows.length > 0) {
-          errors.push({ message: "Product name already exists"})
-          res.render("/users/item-list", {
+        if (results.rows.length > 0) {
+          errors.push({ message: "Product name already exists" });
+          res.render("item-list", {
             errors,
             layout: "layouts/main-layout",
             title: "Item List",
-            params: req.body
-          })
+            params: req.body,
+            model: results.rows,
+          });
         } else {
-          const product = item_name.toLowerCase()
+          const product = item_name.toLowerCase();
           pool.query(
-            'INSERT INTO items (item_name, category, price, quantity, item_image) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-            [item_name, category, price, quantity, item_image],
+            "INSERT INTO items (item_name, category, price, quantity, item_image) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+            [product, category, price, quantity, item_image],
             (err, results) => {
-              if(err) {
-                throw err
+              if (err) {
+                throw err;
               }
-              console.log(results.rows)
-              req.flash("success", "Successfully create a product")
-              res.redirect("/users/item-list")
+              console.log(results.rows);
+              req.flash("success", "Successfully create a product");
+              res.redirect("/users/item-list");
             }
-          )
+          );
         }
-
-
-
-
       }
-    )
+    );
   }
-
-
 });
 
 
