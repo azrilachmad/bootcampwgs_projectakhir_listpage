@@ -1,0 +1,11 @@
+Project Akhir Bootcamp Batch 2 WGS
+
+Aplikasi Inventory :
+- CRUD
+- Login ✔
+- Super Admin ( baru role)
+- App Log
+- Picture For Stufff
+- List Page
+- Detail Page
+- Flow Page

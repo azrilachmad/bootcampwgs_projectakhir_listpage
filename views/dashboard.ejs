@@ -1,0 +1,55 @@
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-6">
+      <% if (username !== undefined || username === null) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong
+          >Success login as <%= username.charAt(0).toUpperCase() +
+          username.slice(1) %> (<%= userRole.charAt(0).toUpperCase() +
+          userRole.slice(1)%>)
+        </strong>
+        <button
+          type="button"
+          class="close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <% } else {%> <% } %>
+    </div>
+  </div>
+
+  <div class="mx-auto" style="width: 300px">
+    <h2>Dashboard Menu</h2>
+  </div>
+  <br />
+</div>
+
+<div class="container text-center">
+  <div class="row justify-content-center mb-5">
+    <div class="col-4">
+      <div class="grid text-center">
+        <div class="g-col-6">
+          <div class="card" style="width: 300px; padding: 5%">
+            <a class="card-block stretched-link text-decoration-none" href="/users/item-list">
+              <center>
+                <img
+                  class="card-img-top"
+                  src="/icons/addData.png"
+                  alt="Card image"
+                  style="width: 100px; height: 100px"
+                />
+              </center>
+              <div class="card-body">
+                <h4 class="card-title">Data Barang</h4>
+                <p class="card-text">Kelola data barang</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

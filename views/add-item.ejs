@@ -1,0 +1,57 @@
+<div class="container mt-3">
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Add Product Item </h2>
+  
+        <% if (typeof errors != 'undefined') { %>
+        <div class="alert alert-danger" role="alert">
+          <ul>
+            <% errors.forEach(error => { %>
+            <li><%= error.msg %> </li>
+            <% }) %>
+          </ul>
+        </div>
+        <% } %>
+  
+        <% let data; %>
+        <% if (locals.params) { data = params %>
+        <% } %>
+  
+        <form method="post" action="/users/item-list/add">
+          <div class="mb-3">
+            <label for="item_name" class="form-label">Product Name :</label>
+            <input type="text" class="form-control" id="item_name" name="item_name" value="" required>
+          </div>
+          <fieldset>
+            <div class="mb-3">
+              <label for="select" class="form-label">Product Category</label>
+              <select id="select" class="form-select" name="category">
+                <option selected disabled >Select Category</option>
+                <option value="jacket">Jacket</option>
+                <option value="shoes">Shoes</option>
+                <option value="tshirt">T-Shirt</option>
+              </select>
+            </div>
+          </fieldset>
+          <div class="mb-3">
+            <label for="price" class="form-label">Price :</label>
+            <input type="number" class="form-control" id="price" name="price" value="<%= data?.email %>">
+          </div>
+          <div class="mb-3">
+            <label for="quantity" class="form-label">Quantity :</label>
+            <input type="number" class="form-control" id="quantity" name="quantity" value="<%= data?.mobile %>">
+          </div>
+          <div class="mb-3" >
+            <label for="item_image" class="form-label">Image :</label>
+            <input type="text" class="form-control" id="item_image" name="item_image" value="<%= data?.mobile %>">
+          </div>
+          
+  
+          <button type="submit" value="add" class="btn btn-primary">
+            Add Product
+          </button>
+        </form>
+  
+      </div>
+    </div>
+  </div>

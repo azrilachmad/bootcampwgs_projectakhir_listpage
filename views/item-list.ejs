@@ -1,0 +1,62 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <h2>Item List :</h2>
+
+      <% if (!model) { %>
+      <div class="alert alert-danger fw-bold" role="alert">
+        list item not found.
+        <a href="/users/item-list" class="alert-link fw-light"
+          ><br />Back to item list.</a>
+      </div>
+      <% } else {%> <% if (msg.length !== 0) { %>
+      <div class="alert alert-success fw-bold" role="alert"><%= msg %></div>
+
+      <% } %> <% } %>
+
+      <% if (model.length < 1 || model.length === null || model.length === undefined) { %>
+        <div class="alert alert-danger fw-bold" role="alert">
+         Data Items not found 
+        </div>
+        <% } else {%>
+      <table class="table table-hover">
+        <thead>
+          <tr class="table table-primary">
+            <th scope="col">No.</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% let i = 1 %> 
+            <% for( const items of model) { %>
+                <tr class="table table-secondary">
+                    <th scope="row"><%= i %> </th>
+                    <% i++ %> 
+                    <td><%= items.item_name %> </td>
+                    <td><%= items.category %> </td>
+                    <td><%= items.price %> </td>
+                    <td><%= items.quantity %> </td>
+                    <td>
+                        <a
+                        class="btn btn-success badge rounded-pill"
+                        href="/users/item-list/<%= items.item_name %>"
+                        role="button"
+                        >Detail</a
+                        >
+                    </td>
+                </tr>
+                <% } %>
+        </tbody>
+    </table>
+    <% } %> 
+
+      <a class="btn btn-primary" href="/users/item-list/add" role="button"
+        >Add Items</a
+      >
+    </div>
+  </div>
+</div>
