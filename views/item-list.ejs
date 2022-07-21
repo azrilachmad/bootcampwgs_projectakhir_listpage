@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-md-8">
-      <h2>Item List :</h2>
+      <h2>Product List :</h2>
 
       <% if (!model) { %>
       <div class="alert alert-danger fw-bold" role="alert">
@@ -9,28 +9,25 @@
         <a href="/users/item-list" class="alert-link fw-light"
           ><br />Back to item list.</a>
       </div>
-      <% } %>
+      <% } else {%>
 
 
-      <div class="row">
-        <div class="col-md-6">
-          <% if (errors.length > 0) { %>
-          <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong><%= errors %>
-            </strong>
-            <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <% } else {%> <% } %>
+      <% if (messages.error) { %>
+        <div class="alert alert-danger" role="alert">
+          <ul>
+            <li><%= erros %></li>
+          </ul>
         </div>
-      </div>
+        <% } %>
+        <% } %> 
 
 
       <% if (model.length < 1 || model.length === null || model.length === undefined) { %>
         <div class="alert alert-danger fw-bold" role="alert">
          Data Items not found 
         </div>
+
+        
         <% } else {%>
       <table class="table table-hover">
         <thead>
@@ -38,8 +35,6 @@
             <th scope="col">No.</th>
             <th scope="col">Product Name</th>
             <th scope="col">Category</th>
-            <th scope="col">Price</th>
-            <th scope="col">Quantity</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
@@ -51,8 +46,6 @@
                     <% i++ %> 
                     <td><%= items.item_name %> </td>
                     <td><%= items.category %> </td>
-                    <td><%= items.price %> </td>
-                    <td><%= items.quantity %> </td>
                     <td>
                         <a
                         class="btn btn-success badge rounded-pill"

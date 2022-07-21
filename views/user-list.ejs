@@ -1,0 +1,67 @@
+<div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <h2>User List :</h2>
+  
+        <% if (!model) { %>
+        <div class="alert alert-danger fw-bold" role="alert">
+          list user not found.
+          <a href="/users/user-list" class="alert-link fw-light"
+            ><br />Back to user list.</a>
+        </div>
+        <% } else {%>
+  
+  
+        <% if (messages.error) { %>
+          <div class="alert alert-danger" role="alert">
+            <ul>
+              <li><%= erros %></li>
+            </ul>
+          </div>
+          <% } %>
+          <% } %> 
+  
+  
+        <% if (model.length < 1 || model.length === null || model.length === undefined) { %>
+          <div class="alert alert-danger fw-bold" role="alert">
+           User data not found 
+          </div>
+  
+          
+          <% } else {%>
+        <table class="table table-hover">
+          <thead>
+            <tr class="table table-primary">
+              <th scope="col">No.</th>
+              <th scope="col">username</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+              <% let i = 1 %> 
+              <% for( const users of model) { %>
+                  <tr class="table table-secondary">
+                      <th scope="row"><%= i %> </th>
+                      <% i++ %> 
+                      <td><%= users.username%> </td>
+                      <td>
+                          <a
+                          class="btn btn-success badge rounded-pill"
+                          href="/users/user-list/<%= users.username%>"
+                          role="button"
+                          >Detail</a
+                          >
+                      </td>
+                  </tr>
+                  <% } %>
+          </tbody>
+      </table>
+      <% } %> 
+  
+        <a class="btn btn-primary" href="/users/item-list/add" role="button"
+          >Add Items</a
+        >
+      </div>
+    </div>
+  </div>
+  

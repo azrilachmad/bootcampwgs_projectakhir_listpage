@@ -98,6 +98,39 @@ app.get("/users/item-list/:item_name", checkNotAuthenticated, (req, res) => {
   });
 });
 
+// User list page
+app.get("/users/user-list", checkNotAuthenticated, (req, res) => {
+  const sql = `SELECT * FROM users ORDER BY username`;
+  pool.query(sql, [], (err, results) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    res.render("user-list", {
+      title: "User List",
+      layout: "layouts/main-layout",
+      msg: req.flash("msg"),
+      model: results.rows,
+    });
+  });
+});
+
+
+// Page User Detail
+app.get("/users/user-list/:username", checkNotAuthenticated, (req, res) => {
+  const sql = `SELECT * FROM users where username = '${req.params.username}'`;
+  pool.query(sql, (err, results) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    res.render("user-detail", {
+      title: "User Detail",
+      layout: "layouts/main-layout",
+      model: results.rows[0],
+    });
+  });
+});
+
+
 // Add User
 app.get("/users/addUser", checkNotAuthenticated, (req, res) => {
   res.render("addUser", {
@@ -169,7 +202,7 @@ app.post("/users/addUser", async (req, res) => {
         console.log(results.rows);
 
         if (results.rows.length > 0) {
-          errors.push({ message: "Username already in use" });
+          errors.push({ message: "Username already exits" });
           res.render("AddUser", {
             errors,
             layout: "layouts/main-layout",
@@ -239,7 +272,7 @@ app.post("/users/item-list/add", async (req, res) => {
 
         if (results.rows.length > 0) {
           errors.push({ message: "Product name already exists" });
-          res.render("item-list", {
+          res.render("add-item", {
             errors,
             layout: "layouts/main-layout",
             title: "Item List",

@@ -1,11 +1,11 @@
 Project Akhir Bootcamp Batch 2 WGS
 
 Aplikasi Inventory :
-- CRUD
+- CRUD (Create Read ✔ | Update Delete X)
 - Login ✔
-- Super Admin ( baru role)
+- Super Admin ( tinggal pembatasan access role user)
 - App Log
-- Picture For Stufff
-- List Page
-- Detail Page
-- Flow Page
+- Picture For Stuff  (Baru fetch, tinggal store image ke public dan store image name ke db)
+- List Page ✔
+- Detail Page ✔
+- Flow Page 

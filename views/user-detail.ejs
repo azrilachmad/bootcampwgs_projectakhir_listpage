@@ -1,0 +1,51 @@
+<div class="container-mt3">
+  <div class="row">
+    <div class="col-md-8">
+      <h2>Item Detail :</h2>
+
+      <% if (!model) { %>
+      <div class="alert alert-danger fw-bold" role="alert">
+        User Not Found.
+        <a href="/users/user-list" class="alert-link fw-light"
+          ><br />Back to item list.</a
+        >
+      </div>
+      <% } else {%>
+
+      <div class="card" style="width: 18rem">
+        <div class="card-body">
+          <h5 class="card-title"><b>Username: </b> <%= model.username %></h5>
+          <h6 class="card-subtitle mb-2"><b>Role: </b> <%= model.role %></h6>
+          <% if (model.role == 'user') { %>
+          <h6 class="card-subtitle mb-2">
+            <b>Privilege Access: </b> View Only
+          </h6>
+          <% } else {%>
+
+          <b>Privilege Access: </b> Full Access <% } %>
+          
+          <a
+            class="btn btn-primary badge rounded-pill mt-3"
+            href="/users/user-list "
+            role="button"
+            >Back</a
+          >
+          <a
+            class="btn btn-warning badge rounded-pill"
+            href="/contact/edit/<%= model.name %>"
+            role="button"
+            >Edit</a
+          >
+          <a
+            onclick="return confirm('Are you sure?')"
+            class="btn btn-danger badge rounded-pill"
+            href="/contact/delete/<%= model.name %>"
+            role="button"
+            >Delete</a
+          >
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>
