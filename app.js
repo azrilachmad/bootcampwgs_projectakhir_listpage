@@ -7,13 +7,41 @@ const flash = require("express-flash");
 const passport = require("passport");
 const { pool } = require("./dbCon");
 const bcrypt = require("bcrypt");
+const path = require('path');
+
+const app = express();
+const port = 3000;
+
+// Static File
+// User Static File (Build in middleware)
+app.use(express.static("public"));
+
+
+const multer = require('multer')
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/images/products')
+  },
+  filename: function (req, file, cb) {
+    console.log(file)
+    cb(null, `item_image-${Date.now()}` + path.extname(file.originalname))
+  }
+})
+
+const fileFilter = (req, file, cb) => {
+  if(file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg'){
+    cb(null, true)
+  }else{
+    cb(null, false)
+  }
+}
+const upload = multer({ storage: storage, fileFilter:fileFilter })
+
 
 const initializePassport = require("./passportCon");
 
 initializePassport(passport);
-
-const app = express();
-const port = 3000;
 
 // user express-ejs=layouts
 const expressLayouts = require("express-ejs-layouts");
@@ -30,9 +58,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Static File
-// User Static File (Build in middleware)
-app.use(express.static("public"));
+
 app.use(
   express.urlencoded({
     extended: true,
@@ -94,6 +120,7 @@ app.get("/users/item-list/:item_name", checkNotAuthenticated, (req, res) => {
       title: "Item Detail",
       layout: "layouts/main-layout",
       model: results.rows[0],
+      msg: req.flash("msg"),
     });
   });
 });
@@ -139,7 +166,7 @@ app.get("/users/addUser", checkNotAuthenticated, (req, res) => {
   });
 });
 
-app.get("/users/logout", (req, res, next) => {
+app.get("/users/logout", checkNotAuthenticated, (req, res, next) => {
   req.logout(function (err) {
     if (err) {
       return next(err);
@@ -159,7 +186,7 @@ app.post(
   })
 );
 
-app.post("/users/addUser", async (req, res) => {
+app.post("/users/addUser", checkNotAuthenticated, async (req, res) => {
   const { username, password, role, password2 } = req.body;
 
   console.log({
@@ -228,19 +255,25 @@ app.post("/users/addUser", async (req, res) => {
   }
 });
 
-app.post("/users/item-list/add", async (req, res) => {
-  const { item_name, category, price, quantity, item_image } = req.body;
-
+app.post("/users/item-list/add", checkNotAuthenticated, upload.array('img', 1), async (req, res) => {
+  const { item_name, category, price, quantity,} = req.body;
+  const img  = req.files[0].filename
   console.log({
     item_name,
     category,
     price,
     quantity,
-    item_image,
+    img
   });
 
   const errors = [];
 
+  
+
+  
+  if (img === undefined) {
+    errors.push({ message: "Please insert an image" });
+  }
   if (category === undefined) {
     errors.push({ message: "Please select a category" });
   }
@@ -257,13 +290,13 @@ app.post("/users/item-list/add", async (req, res) => {
     res.render("add-item", {
       errors,
       layout: "layouts/main-layout",
-      title: "Item List",
+      title: "Add Item",
       params: req.body,
     });
   } else {
     pool.query(
-      `SELECT * FROM items where item_name=$1`,
-      [item_name],
+      `SELECT * FROM items WHERE item_name = $1`,
+      [item_name.toLowerCase()],
       (err, results) => {
         if (err) {
           throw err;
@@ -273,17 +306,16 @@ app.post("/users/item-list/add", async (req, res) => {
         if (results.rows.length > 0) {
           errors.push({ message: "Product name already exists" });
           res.render("add-item", {
-            errors,
+            errors, 
             layout: "layouts/main-layout",
-            title: "Item List",
+            title: "Add Item",
             params: req.body,
-            model: results.rows,
           });
         } else {
           const product = item_name.toLowerCase();
           pool.query(
             "INSERT INTO items (item_name, category, price, quantity, item_image) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-            [product, category, price, quantity, item_image],
+            [product, category, price, quantity, img],
             (err, results) => {
               if (err) {
                 throw err;
@@ -298,6 +330,46 @@ app.post("/users/item-list/add", async (req, res) => {
     );
   }
 });
+
+
+// Delete Product 
+app.get("/users/item-list/delete/:item_name", checkNotAuthenticated, (req, res) => {
+  const name = req.params.item_name;
+  const check = `SELECT item_name FROM items WHERE item_name = '${name}'`;
+  const sql = `DELETE FROM items WHERE item_name = '${name}'`;
+  console.log(check)
+
+  pool.query(sql, (err, result) => {
+    function capitalizeTheFirstLetterOfEachWord(words) {
+      var separateWord = words.toLowerCase().split(' '); 
+        for (var i = 0; i < separateWord.length; i++) { 
+          separateWord[i] = separateWord[i].charAt(0).toUpperCase() + separateWord[i].substring(1);
+        } 
+       return separateWord.join(' ');
+    }   
+
+    if (err) {
+      res.send(err.message);
+    }
+    if (!name) {
+      res.status(404).send("<h1>404</h1>");
+    }
+    if (name !== sql) {
+
+      req.flash("msg", `Product ${capitalizeTheFirstLetterOfEachWord(req.params.item_name)} has been deleted`);
+      res.redirect("/users/item-list");
+      
+    } else if (req.params.name === sql) {
+      res.render("item-list", {
+        title: "Item List",
+        layout: "layouts/main-layout",
+        model: result.rows[0],
+      });
+    }
+  });
+});
+
+
 
 
 app.use("/", (req, res) => {

@@ -3,6 +3,16 @@
     <div class="col-md-8">
       <h2>Product List :</h2>
 
+      <% if (messages.success) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong><%= messages.success %>
+          </strong>
+          <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% } %> 
+
       <% if (!model) { %>
       <div class="alert alert-danger fw-bold" role="alert">
         list item not found.
@@ -10,6 +20,11 @@
           ><br />Back to item list.</a>
       </div>
       <% } else {%>
+        <% if (msg.length !== 0) { %>
+          <div class="alert alert-success fw-bold" role="alert">
+            <%= msg %> 
+          </div>
+          <% } %>
 
 
       <% if (messages.error) { %>
@@ -40,11 +55,21 @@
         </thead>
         <tbody>
             <% let i = 1 %> 
+
+            <% function capitalizeTheFirstLetterOfEachWord(words) {%> 
+              <% var separateWord = words.toLowerCase().split(' '); %>
+                <% for (var i = 0; i < separateWord.length; i++) { %>
+                  <%separateWord[i] = separateWord[i].charAt(0).toUpperCase() + separateWord[i].substring(1);%>
+                <% } %> 
+              <%  return separateWord.join(' ');%> 
+            <% } %>  
+
+
             <% for( const items of model) { %>
                 <tr class="table table-secondary">
                     <th scope="row"><%= i %> </th>
                     <% i++ %> 
-                    <td><%= items.item_name %> </td>
+                    <td><%= capitalizeTheFirstLetterOfEachWord(items.item_name) %> </td>
                     <td><%= items.category %> </td>
                     <td>
                         <a

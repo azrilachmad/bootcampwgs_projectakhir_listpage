@@ -9,6 +9,16 @@
         </div>
         <% } else {%>
   
+          <% function capitalizeTheFirstLetterOfEachWord(words) {%> 
+            <% var separateWord = words.toLowerCase().split(' '); %>
+              <% for (var i = 0; i < separateWord.length; i++) { %>
+                <%separateWord[i] = separateWord[i].charAt(0).toUpperCase() + separateWord[i].substring(1);%>
+              <% } %> 
+            <%  return separateWord.join(' ');%> 
+          <% } %>  
+
+
+
         <div class="card" style="width: 18rem;">
           <div class="card-body">
             <img
@@ -17,13 +27,13 @@
                   alt="Card image"
                   style="width: 250px; height: 250px"
                 />
-            <h5 class="card-title"><b>Product Name: </b> <%= model.item_name %> </h5>
+            <h5 class="card-title"><b>Product Name: </b> <%= capitalizeTheFirstLetterOfEachWord(model.item_name) %> </h5>
             <h6 class="card-subtitle mb-2 "><b>Category: </b> <%= model.category %> </h6>
             <h6 class="card-subtitle mt-3"><b>Stock Left: </b> <%= model.quantity %> </h6>
             <p class="card-text"><b>Price: </b><%= new Intl.NumberFormat('en-US', { style: 'currency', currency: 'IDR', maximumFractionDigits:0}).format(model.price).replace(/,/g, '.') %> </p>
             <a class="btn btn-primary badge rounded-pill" href="/users/item-list " role="button">Back</a>
             <a class="btn btn-warning badge rounded-pill" href="/contact/edit/<%= model.name %>" role="button">Edit</a>
-            <a onclick="return confirm('Are you sure?')" class="btn btn-danger badge rounded-pill" href="/contact/delete/<%= model.name %>" role="button">Delete</a>
+            <a onclick="return confirm('Are you sure?')" class="btn btn-danger badge rounded-pill" href="/users/item-list/delete/<%= model.item_name %>" role="button">Delete</a>
           </div>
         </div>
         <% } %> 
